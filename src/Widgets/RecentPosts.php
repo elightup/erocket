@@ -38,11 +38,11 @@ class RecentPosts extends WP_Widget {
 		}
 		.recent-post-body {
 			flex: 1;
+			line-height: 1.25;
 		}
 		.recent-post-body a {
 			font-weight: 700;
 			color: inherit;
-			line-height: 1.25;
 		}
 		.recent-post-body time {
 			display: block;
