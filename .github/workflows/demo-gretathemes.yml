@@ -1,0 +1,16 @@
+name: Deploy to GretaThemes demo site.
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: SamKirkland/FTP-Deploy-Action@3.0.0
+      with:
+        ftp-server: ${{ secrets.DEMO_GRETATHEMES_URL }}
+        ftp-username: ${{ secrets.DEMO_GRETATHEMES_USER }}
+        ftp-password: ${{ secrets.DEMO_GRETATHEMES_PASSWORD }}
+        git-ftp-args: --insecure
