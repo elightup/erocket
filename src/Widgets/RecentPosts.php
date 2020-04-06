@@ -34,7 +34,6 @@ class RecentPosts extends WP_Widget {
 			display: block;
 			width: 64px;
 			height: 64px;
-			border-radius: 4px;
 		}
 		.recent-post-body {
 			flex: 1;
