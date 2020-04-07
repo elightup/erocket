@@ -36,6 +36,11 @@ class Sharing {
 				'title' => __( 'Share on Reddit', 'erocket' ),
 				'url' => 'https://www.reddit.com/submit?url=%s',
 			],
+			'mail' => [
+				'label' => __( 'Mail', 'erocket' ),
+				'title' => __( 'Share via Email', 'erocket' ),
+				'url' => 'mailto:?body=%s',
+			],
 		];
 
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
@@ -155,11 +160,11 @@ class Sharing {
 		}
 
 		$html = '';
-		foreach ( $services as $service ) {
-			$service  = $this->services[ $service ];
+		foreach ( $services as $key ) {
+			$service  = $this->services[ $key ];
 			$url      = sprintf( $service['url'], get_permalink() );
 			$html    .= render_block_core_social_link( [
-				'service' => $service,
+				'service' => $key,
 				'url'     => $url,
 				'label'   => $service['title'],
 			] );

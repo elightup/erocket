@@ -78,7 +78,7 @@ class ContactInfo extends WP_Widget_Text {
 		<?php endif; ?>
 		<?php if ( ! empty( $instance[ 'email' ] ) ) : ?>
 			<div class="eci-info">
-				<?= block_core_social_link_services( 'mail', 'icon' ); ?>
+				<?= block_core_social_link_get_icon( 'mail' ); ?>
 				<a href="mailto:<?= esc_attr( $instance['email'] ); ?>"><?= esc_html( $instance['email'] ); ?></a>
 			</div>
 		<?php endif; ?>
