@@ -155,11 +155,11 @@ class Sharing {
 		}
 
 		$html = '';
-		foreach ( $services as $key ) {
-			$service  = $this->services[ $key ];
+		foreach ( $services as $service ) {
+			$service  = $this->services[ $service ];
 			$url      = sprintf( $service['url'], get_permalink() );
 			$html    .= render_block_core_social_link( [
-				'service' => $key,
+				'service' => $service,
 				'url'     => $url,
 				'label'   => $service['title'],
 			] );
