@@ -6,6 +6,7 @@ class Loader {
 		define( 'ER_DIR', dirname( __DIR__ ) );
 
 		add_action( 'widgets_init', [ $this, 'register_widgets' ] );
+		new Sharing;
 	}
 
 	public function register_widgets() {

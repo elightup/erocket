@@ -1,0 +1,179 @@
+<?php
+namespace ERocket;
+
+class Sharing {
+	private $services;
+
+	public function __construct() {
+		$this->services = [
+			'facebook' => [
+				'label' => __( 'Facebook', 'erocket' ),
+				'title' => __( 'Share on Facebook', 'erocket' ),
+				'url'   => 'https://facebook.com/sharer/sharer.php?u=%s',
+			],
+			'twitter' => [
+				'label' => __( 'Twitter', 'erocket' ),
+				'title' => __( 'Tweet on Twitter', 'erocket' ),
+				'url'   => 'https://twitter.com/intent/tweet?url=%s',
+			],
+			'linkedin' => [
+				'label' => __( 'LinkedIn', 'erocket' ),
+				'title' => __( 'Share on LinkedIn', 'erocket' ),
+				'url'   => 'https://www.linkedin.com/shareArticle?mini=true&url=%s',
+			],
+			'pinterest' => [
+				'label' => __( 'Pinterest', 'erocket' ),
+				'title' => __( 'Pin on Pinterest', 'erocket' ),
+				'url'   => 'https://pinterest.com/pin/create/button/?url=%s',
+			],
+			'pocket' => [
+				'label' => __( 'Pocket', 'erocket' ),
+				'title' => __( 'Save to pocket', 'erocket' ),
+				'url' => 'https://getpocket.com/save?url=%s',
+			],
+			'reddit' => [
+				'label' => __( 'Reddit', 'erocket' ),
+				'title' => __( 'Share on Reddit', 'erocket' ),
+				'url' => 'https://www.reddit.com/submit?url=%s',
+			],
+		];
+
+		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
+
+		add_filter( 'the_content', [ $this, 'output' ] );
+
+		// Custom action to output sharing buttons anywhere.
+		add_action( 'erocket/sharing', [ $this, 'output_custom_location' ] );
+	}
+
+	public function add_settings_page() {
+		$page_hook = add_options_page( __( 'eRocket', 'erocket' ), __( 'eRocket', 'erocket' ), 'manage_options', 'erocket', [ $this, 'render' ] );
+		add_action( "load-{$page_hook}", [ $this, 'save' ] );
+	}
+
+	public function render() {
+		$option = get_option( 'erocket' );
+		?>
+		<div class="wrap">
+			<h1><?= esc_html( get_admin_page_title() ) ?></h1>
+
+			<form method="POST" action="">
+				<?php wp_nonce_field( 'save' ) ?>
+				<h3><?php esc_html_e( 'Sharing', 'erocket' ); ?></h3>
+
+				<table class="form-table">
+					<tr>
+						<th><?php esc_html_e( 'Social Networks', 'erocket' ); ?></th>
+						<td>
+							<?php $selected = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services ); ?>
+							<?php foreach ( $this->services as $key => $service ) : ?>
+								<p>
+									<label>
+										<input type="checkbox" name="erocket[sharing_services][]" value="<?= esc_attr( $key ); ?>"<?php checked( in_array( $key, $selected ) ) ?>>
+										<?= esc_html( $service['label'] ); ?>
+									</label>
+								</p>
+							<?php endforeach; ?>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Position', 'erocket' ); ?></th>
+						<td>
+							<?php $position = isset( $option['sharing_position'] ) ? $option['sharing_position'] : 'after'; ?>
+							<select name="erocket[sharing_position]">
+								<option value="before"<?php selected( $position, 'before' ); ?>><?php esc_html_e( 'Before Content', 'erocket' ); ?></option>
+								<option value="after"<?php selected( $position, 'after' ); ?>><?php esc_html_e( 'After Content', 'erocket' ); ?></option>
+								<option value="both"<?php selected( $position, 'both' ); ?>><?php esc_html_e( 'Both', 'erocket' ); ?></option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th><?php esc_html_e( 'Post Types', 'erocket' ); ?></th>
+						<td>
+							<?php
+							$selected = isset( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
+							$post_types = get_post_types( ['public' => true], 'objects' );
+							?>
+							<?php foreach ( $post_types as $slug => $post_type ) : ?>
+								<p>
+									<label>
+										<input type="checkbox" name="erocket[sharing_types][]" value="<?= esc_attr( $slug ); ?>"<?php checked( in_array( $slug, $selected ) ) ?>>
+										<?= esc_html( $post_type->labels->singular_name ); ?>
+									</label>
+								</p>
+							<?php endforeach; ?>
+						</td>
+					</tr>
+				</table>
+
+				<?php submit_button( __( 'Save Changes', 'erocket' ) ); ?>
+			</form>
+		</div>
+		<?php
+	}
+
+	public function save() {
+		if ( empty( $_POST['submit'] ) || ! check_ajax_referer( 'save', false, false ) ) {
+			return;
+		}
+
+		$data = isset( $_POST['erocket'] ) ? $_POST['erocket'] : [];
+		update_option( 'erocket', $data );
+	}
+
+	public function output( $content ) {
+		if ( ! $this->is_enabled() ) {
+			return $content;
+		}
+
+		$html     = $this->get_html();
+		$option   = get_option( 'erocket' );
+		$position = isset( $option['sharing_position'] ) ? $option['sharing_position'] : 'after';
+
+		if ( 'before' === $position ) {
+			$content = $html . $content;
+		} elseif ( 'after' === $position ) {
+			$content .= $html;
+		} elseif ( 'both' === $position ) {
+			$content = $html . $content . $output;
+		}
+
+		return $content;
+	}
+
+	public function output_custom_location() {
+		echo wp_kses_post( $this->get_html() );
+	}
+
+	private function get_html() {
+		$option   = get_option( 'erocket' );
+		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
+		$services = array_intersect( $services, array_keys( $this->services ) );
+
+		if ( empty( $services ) ) {
+			return '';
+		}
+
+		$html = '';
+		foreach ( $services as $key ) {
+			$service  = $this->services[ $key ];
+			$url      = sprintf( $service['url'], get_permalink() );
+			$html    .= render_block_core_social_link( [
+				'service' => $key,
+				'url'     => $url,
+				'label'   => $service['title'],
+			] );
+		}
+
+		return "<ul class='wp-block-social-links es-buttons'>$html</ul>";
+	}
+
+	private function is_enabled() {
+		$option   = get_option( 'erocket' );
+		$types    = isset( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
+		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
+		$services = array_intersect( $services, array_keys( $this->services ) );
+
+		return is_singular() && in_array( get_post_type(), $types ) && ! empty( $services );
+	}
+}

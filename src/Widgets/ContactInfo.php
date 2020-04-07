@@ -131,7 +131,7 @@ class ContactInfo extends WP_Widget_Text {
 		<?php endif; ?>
 		<?php if ( ! empty( $instance[ 'email' ] ) ) : ?>
 			<div class="eci-info">
-				<?php $this->output_svg( 'envelope' ); ?>
+				<?php $this->output_svg( 'email' ); ?>
 				<a href="mailto:<?php echo esc_attr( $instance['email'] ); ?>"><?php echo esc_html( $instance['email'] ); ?></a>
 			</div>
 		<?php endif; ?>
