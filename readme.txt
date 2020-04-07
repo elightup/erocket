@@ -2,7 +2,7 @@
 Contributors: elightup, gretathemes, rilwis
 Donate link: https://elightup.com
 Tags: theme, themes, widget, widgets, template, templates
-Requires at least: 4.5
+Requires at least: 5.4
 Tested up to: 5.4
 Requires PHP: 5.6
 Stable tag: 1.0.0
@@ -13,7 +13,13 @@ Supercharge your WordPress themes with extra functionalities and modules.
 
 == Description ==
 
-Extend your theme functionality with eRocket with various modules like custom widgets, social media sharing buttons, page builder modules and more.
+Extend your theme functionality with eRocket with various modules like custom widgets and social media sharing buttons.
+
+### Features
+
+- Contact info widget
+- Recent posts widget
+- Social sharing buttons
 
 == Installation ==
 
