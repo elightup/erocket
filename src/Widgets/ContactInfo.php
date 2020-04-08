@@ -150,6 +150,6 @@ class ContactInfo extends WP_Widget_Text {
 	}
 
 	private function output_svg( $key ) {
-		echo file_get_contents( ER_DIR . "/img/$key.svg" );
+		echo file_get_contents( EROCKET_DIR . "/img/$key.svg" );
 	}
 }

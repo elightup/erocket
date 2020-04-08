@@ -44,11 +44,7 @@ class Sharing {
 		];
 
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
-
 		add_filter( 'the_content', [ $this, 'output' ] );
-
-		// Custom action to output sharing buttons anywhere.
-		add_action( 'erocket/sharing', [ $this, 'output_custom_location' ] );
 	}
 
 	public function add_settings_page() {
@@ -122,8 +118,22 @@ class Sharing {
 			return;
 		}
 
-		$data = isset( $_POST['erocket'] ) ? $_POST['erocket'] : [];
-		update_option( 'erocket', $data );
+		$option = isset( $_POST['erocket'] ) ? $_POST['erocket'] : [];
+
+		// Make sure selected services are in the predefined list.
+		$option['sharing_services'] = isset( $option['sharing_services'] ) && is_array( $option['sharing_services'] ) ? $option['sharing_services'] : [];
+		$option['sharing_services'] = array_intersect( $option['sharing_services'], array_keys( $this->services ) );
+
+		// Validate position.
+		$option['sharing_position'] = isset( $option['sharing_position'] ) && in_array( $option['sharing_position'], ['before', 'after', 'both'] ) ? $option['sharing_position'] : 'after';
+
+		// Make sure post types valid and exist.
+		$option['sharing_types'] = isset( $option['sharing_types'] ) && is_array( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
+		$option['sharing_types'] = array_filter( $option['sharing_types'], function( $post_type ) {
+			return post_type_exists( $post_type );
+		} );
+
+		update_option( 'erocket', $option );
 	}
 
 	public function output( $content ) {
@@ -140,14 +150,10 @@ class Sharing {
 		} elseif ( 'after' === $position ) {
 			$content .= $html;
 		} elseif ( 'both' === $position ) {
-			$content = $html . $content . $output;
+			$content = $html . $content . $html;
 		}
 
 		return $content;
-	}
-
-	public function output_custom_location() {
-		echo wp_kses_post( $this->get_html() );
 	}
 
 	private function get_html() {
