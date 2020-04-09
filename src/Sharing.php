@@ -70,7 +70,7 @@ class Sharing {
 							<?php foreach ( $this->services as $key => $service ) : ?>
 								<p>
 									<label>
-										<input type="checkbox" name="erocket[sharing_services][]" value="<?= esc_attr( $key ); ?>"<?php checked( in_array( $key, $selected ) ) ?>>
+										<input type="checkbox" name="sharing_services[]" value="<?= esc_attr( $key ); ?>"<?php checked( in_array( $key, $selected ) ) ?>>
 										<?= esc_html( $service['label'] ); ?>
 									</label>
 								</p>
@@ -81,7 +81,7 @@ class Sharing {
 						<th><?php esc_html_e( 'Position', 'erocket' ); ?></th>
 						<td>
 							<?php $position = isset( $option['sharing_position'] ) ? $option['sharing_position'] : 'after'; ?>
-							<select name="erocket[sharing_position]">
+							<select name="sharing_position">
 								<option value="before"<?php selected( $position, 'before' ); ?>><?php esc_html_e( 'Before Content', 'erocket' ); ?></option>
 								<option value="after"<?php selected( $position, 'after' ); ?>><?php esc_html_e( 'After Content', 'erocket' ); ?></option>
 								<option value="both"<?php selected( $position, 'both' ); ?>><?php esc_html_e( 'Both', 'erocket' ); ?></option>
@@ -98,7 +98,7 @@ class Sharing {
 							<?php foreach ( $post_types as $slug => $post_type ) : ?>
 								<p>
 									<label>
-										<input type="checkbox" name="erocket[sharing_types][]" value="<?= esc_attr( $slug ); ?>"<?php checked( in_array( $slug, $selected ) ) ?>>
+										<input type="checkbox" name="sharing_types[]" value="<?= esc_attr( $slug ); ?>"<?php checked( in_array( $slug, $selected ) ) ?>>
 										<?= esc_html( $post_type->labels->singular_name ); ?>
 									</label>
 								</p>
@@ -118,22 +118,20 @@ class Sharing {
 			return;
 		}
 
-		$option = isset( $_POST['erocket'] ) ? $_POST['erocket'] : [];
-
 		// Make sure selected services are in the predefined list.
-		$option['sharing_services'] = isset( $option['sharing_services'] ) && is_array( $option['sharing_services'] ) ? $option['sharing_services'] : [];
-		$option['sharing_services'] = array_intersect( $option['sharing_services'], array_keys( $this->services ) );
+		$sharing_services = isset( $_POST['sharing_services'] ) && is_array( $_POST['sharing_services'] ) ? $_POST['sharing_services'] : [];
+		$sharing_services = array_intersect( $sharing_services, array_keys( $this->services ) );
 
 		// Validate position.
-		$option['sharing_position'] = isset( $option['sharing_position'] ) && in_array( $option['sharing_position'], ['before', 'after', 'both'] ) ? $option['sharing_position'] : 'after';
+		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], ['before', 'after', 'both'] ) ? $_POST['sharing_position'] : 'after';
 
 		// Make sure post types valid and exist.
-		$option['sharing_types'] = isset( $option['sharing_types'] ) && is_array( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
-		$option['sharing_types'] = array_filter( $option['sharing_types'], function( $post_type ) {
+		$sharing_types = isset( $_POST['sharing_types'] ) && is_array( $_POST['sharing_types'] ) ? $_POST['sharing_types'] : ['post'];
+		$sharing_types = array_filter( $sharing_types, function( $post_type ) {
 			return post_type_exists( $post_type );
 		} );
 
-		update_option( 'erocket', $option );
+		update_option( 'erocket', compact( 'sharing_services', 'sharing_position', 'sharing_types' ) );
 	}
 
 	public function output( $content ) {
