@@ -120,7 +120,9 @@ class Sharing {
 
 		// Make sure selected services are in the predefined list.
 		$sharing_services = isset( $_POST['sharing_services'] ) && is_array( $_POST['sharing_services'] ) ? $_POST['sharing_services'] : [];
-		$sharing_services = array_intersect( $sharing_services, array_keys( $this->services ) );
+		$sharing_services = array_filter( $sharing_services, function( $service ) {
+			return array_key_exists( $service, $this->services );
+		} );
 
 		// Validate position.
 		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], ['before', 'after', 'both'] ) ? $_POST['sharing_position'] : 'after';
