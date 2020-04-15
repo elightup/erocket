@@ -1,3 +1,6 @@
 .github export-ignore
+.wordpres-org export-ignore
 .giattributes export-ignore
+.gitignore export-ignore
 *.json export-ignore
+*.txt export-ignore
