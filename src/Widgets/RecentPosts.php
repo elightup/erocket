@@ -10,8 +10,9 @@ class RecentPosts extends WP_Widget {
 	public function __construct() {
 		$this->defaults = [
 			'title'    => __( 'Recent Posts', 'erocket' ),
-			'number'   => 5,
 			'category' => '',
+			'style'    => 'small-thumb',
+			'number'   => 5,
 		];
 
 		parent::__construct( 'erp', __( '[eRocket] Recent Posts', 'erocket' ), [
@@ -32,11 +33,17 @@ class RecentPosts extends WP_Widget {
 		.erp li:not(:last-child) {
 			margin-bottom: 16px;
 		}
-		.erp li > a {
+		.erp-big-thumb a {
+			flex: 0 0 100%;
+			width: 100%;
+			flex: 0 0 100%;
+			margin-right: 0;
+		}
+		.erp-small-thumb > a {
 			display: block;
 			margin-right: 12px;
 		}
-		.erp img {
+		.erp-small-thumb img {
 			display: block;
 			width: 64px;
 			height: 64px;
@@ -88,10 +95,16 @@ class RecentPosts extends WP_Widget {
 		?>
 		<ul>
 			<?php while ( $query->have_posts() ) : $query->the_post(); ?>
-				<li>
+				<li class="<?php esc_attr_e( 'small-thumb' === $instance['style'] ? 'erp-small-thumb' : 'erp-big-thumb', 'erocket' ); ?>">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<a href="<?php the_permalink(); ?>">
-							<?php the_post_thumbnail( 'thumbnail' ); ?>
+							<?php
+							if ( 'small-thumb' === $instance['style'] ) :
+								the_post_thumbnail( 'thumbnail' );
+							else :
+								the_post_thumbnail( 'full' );
+							endif;
+							?>
 						</a>
 					<?php endif; ?>
 					<div class="erp-body">
@@ -108,10 +121,11 @@ class RecentPosts extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance             = $old_instance;
+		$instance   = $old_instance;
 		$instance['title']    = sanitize_text_field( $new_instance['title'] );
-		$instance['number']   = absint( $new_instance['number'] );
 		$instance['category'] = absint( $new_instance['category'] );
+		$instance['style']   = $new_instance['style'];
+		$instance['number']   = absint( $new_instance['number'] );
 		return $instance;
 	}
 
@@ -136,6 +150,13 @@ class RecentPosts extends WP_Widget {
 				'class'           => 'widefat',
 			] );
 			?>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'style' ); ?>"><?php esc_html_e( 'Style:', 'erocket' ); ?></label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'style' ); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>">
+				<option <?php esc_attr_e( 'small-thumb' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="small-thumb"><?php esc_html_e( 'Small thumbnail', 'erocket' ); ?></option>
+				<option <?php esc_attr_e( 'big-thumb' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="big-thumb"><?php esc_html_e( 'Big thumbnail', 'erocket' ); ?></option>
+			</select>
 		</p>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts to show:', 'erocket' ); ?></label>
