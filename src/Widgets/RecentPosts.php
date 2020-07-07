@@ -33,6 +33,9 @@ class RecentPosts extends WP_Widget {
 		.erp li:not(:last-child) {
 			margin-bottom: 16px;
 		}
+		.erp-big-thumb {
+			flex-direction: column;
+		}
 		.erp-big-thumb a {
 			flex: 0 0 100%;
 			width: 100%;
