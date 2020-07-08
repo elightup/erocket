@@ -102,13 +102,7 @@ class RecentPosts extends WP_Widget {
 				<li class="<?php esc_attr_e( 'horizontal' === $instance['style'] ? 'erp-horizontal' : 'erp-vertical', 'erocket' ); ?>">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<a href="<?php the_permalink(); ?>">
-							<?php
-							if ( 'horizontal' === $instance['style'] ) :
-								the_post_thumbnail( 'thumbnail' );
-							else :
-								the_post_thumbnail( 'full' );
-							endif;
-							?>
+							<?php the_post_thumbnail( $instance['img_size'] ); ?>
 						</a>
 					<?php endif; ?>
 					<div class="erp-body">
@@ -160,8 +154,8 @@ class RecentPosts extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'style' ); ?>"><?php esc_html_e( 'Style:', 'erocket' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'style' ); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>">
-				<option <?php esc_attr_e( 'horizontal' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="horizontal"><?php esc_html_e( 'Horizontal', 'erocket' ); ?></option>
-				<option <?php esc_attr_e( 'vertical' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="vertical"><?php esc_html_e( 'Vertical', 'erocket' ); ?></option>
+				<option <?php selected( 'horizontal', $instance['style'] ); ?> value="horizontal"><?php esc_html_e( 'Horizontal', 'erocket' ); ?></option>
+				<option <?php selected( 'vertical', $instance['style'] ); ?> value="vertical"><?php esc_html_e( 'Vertical', 'erocket' ); ?></option>
 			</select>
 		</p>
 		<p>
@@ -171,7 +165,7 @@ class RecentPosts extends WP_Widget {
 				global $_wp_additional_image_sizes;
 				foreach ( $_wp_additional_image_sizes as $size_name => $size_atts ) :
 				?>
-					<option <?php esc_attr_e( $size_name === $instance['img_size'] ? 'selected' : '', 'erocket' ); ?> value="<?php echo $size_name; ?>"><?php printf( '%1s (%2sx%3s)', $size_name, $size_atts['width'], $size_atts['height'] ); ?></option>
+					<option <?php selected( $size_name, $instance['img_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', $size_name, $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
