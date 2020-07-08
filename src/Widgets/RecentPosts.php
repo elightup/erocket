@@ -11,7 +11,8 @@ class RecentPosts extends WP_Widget {
 		$this->defaults = [
 			'title'    => __( 'Recent Posts', 'erocket' ),
 			'category' => '',
-			'style'    => 'small-thumb',
+			'style'    => 'horizontal',
+			'img_size' => 'post-thumbnail',
 			'number'   => 5,
 		];
 
@@ -33,20 +34,20 @@ class RecentPosts extends WP_Widget {
 		.erp li:not(:last-child) {
 			margin-bottom: 16px;
 		}
-		.erp-big-thumb {
+		.erp-vertical {
 			flex-direction: column;
 		}
-		.erp-big-thumb a {
+		.erp-vertical a {
 			flex: 0 0 100%;
 			width: 100%;
 			flex: 0 0 100%;
 			margin-right: 0;
 		}
-		.erp-small-thumb > a {
+		.erp-horizontal > a {
 			display: block;
 			margin-right: 12px;
 		}
-		.erp-small-thumb img {
+		.erp-horizontal img {
 			display: block;
 			width: 64px;
 			height: 64px;
@@ -98,11 +99,11 @@ class RecentPosts extends WP_Widget {
 		?>
 		<ul>
 			<?php while ( $query->have_posts() ) : $query->the_post(); ?>
-				<li class="<?php esc_attr_e( 'small-thumb' === $instance['style'] ? 'erp-small-thumb' : 'erp-big-thumb', 'erocket' ); ?>">
+				<li class="<?php esc_attr_e( 'horizontal' === $instance['style'] ? 'erp-horizontal' : 'erp-vertical', 'erocket' ); ?>">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<a href="<?php the_permalink(); ?>">
 							<?php
-							if ( 'small-thumb' === $instance['style'] ) :
+							if ( 'horizontal' === $instance['style'] ) :
 								the_post_thumbnail( 'thumbnail' );
 							else :
 								the_post_thumbnail( 'full' );
@@ -125,9 +126,11 @@ class RecentPosts extends WP_Widget {
 
 	public function update( $new_instance, $old_instance ) {
 		$instance   = $old_instance;
+
 		$instance['title']    = sanitize_text_field( $new_instance['title'] );
 		$instance['category'] = absint( $new_instance['category'] );
-		$instance['style']   = $new_instance['style'];
+		$instance['style']    = $new_instance['style'];
+		$instance['img_size'] = $new_instance['img_size'];
 		$instance['number']   = absint( $new_instance['number'] );
 		return $instance;
 	}
@@ -157,8 +160,19 @@ class RecentPosts extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'style' ); ?>"><?php esc_html_e( 'Style:', 'erocket' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'style' ); ?>" name="<?php echo $this->get_field_name( 'style' ); ?>">
-				<option <?php esc_attr_e( 'small-thumb' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="small-thumb"><?php esc_html_e( 'Small thumbnail', 'erocket' ); ?></option>
-				<option <?php esc_attr_e( 'big-thumb' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="big-thumb"><?php esc_html_e( 'Big thumbnail', 'erocket' ); ?></option>
+				<option <?php esc_attr_e( 'horizontal' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="horizontal"><?php esc_html_e( 'Horizontal', 'erocket' ); ?></option>
+				<option <?php esc_attr_e( 'vertical' === $instance['style'] ? 'selected' : '', 'erocket' ); ?> value="vertical"><?php esc_html_e( 'Vertical', 'erocket' ); ?></option>
+			</select>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'img_size' ); ?>"><?php esc_html_e( 'Image size:', 'erocket' ); ?></label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'img_size' ); ?>" name="<?php echo $this->get_field_name( 'img_size' ); ?>">
+				<?php
+				global $_wp_additional_image_sizes;
+				foreach ( $_wp_additional_image_sizes as $size_name => $size_atts ) :
+				?>
+					<option <?php esc_attr_e( $size_name === $instance['img_size'] ? 'selected' : '', 'erocket' ); ?> value="<?php echo $size_name; ?>"><?php printf( '%1s (%2sx%3s)', $size_name, $size_atts['width'], $size_atts['height'] ); ?></option>
+				<?php endforeach; ?>
 			</select>
 		</p>
 		<p>
