@@ -9,11 +9,11 @@ class RecentPosts extends WP_Widget {
 
 	public function __construct() {
 		$this->defaults = [
-			'title'    => __( 'Recent Posts', 'erocket' ),
-			'category' => '',
-			'style'    => 'horizontal',
-			'img_size' => 'post-thumbnail',
-			'number'   => 5,
+			'title'      => __( 'Recent Posts', 'erocket' ),
+			'category'   => '',
+			'style'      => 'horizontal',
+			'image_size' => 'thumbnail',
+			'number'     => 5,
 		];
 
 		parent::__construct( 'erp', __( '[eRocket] Recent Posts', 'erocket' ), [
@@ -102,7 +102,7 @@ class RecentPosts extends WP_Widget {
 				<li class="<?php esc_attr_e( 'horizontal' === $instance['style'] ? 'erp-horizontal' : 'erp-vertical', 'erocket' ); ?>">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<a href="<?php the_permalink(); ?>">
-							<?php the_post_thumbnail( $instance['img_size'] ); ?>
+							<?php the_post_thumbnail( $instance['image_size'] ); ?>
 						</a>
 					<?php endif; ?>
 					<div class="erp-body">
@@ -119,14 +119,29 @@ class RecentPosts extends WP_Widget {
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$instance   = $old_instance;
-
-		$instance['title']    = sanitize_text_field( $new_instance['title'] );
-		$instance['category'] = absint( $new_instance['category'] );
-		$instance['style']    = $new_instance['style'];
-		$instance['img_size'] = $new_instance['img_size'];
-		$instance['number']   = absint( $new_instance['number'] );
+		$instance               = $old_instance;
+		$instance['title']      = sanitize_text_field( $new_instance['title'] );
+		$instance['category']   = absint( $new_instance['category'] );
+		$instance['style']      = sanitize_text_field( $new_instance['style'] );
+		$instance['image_size'] = sanitize_text_field( $new_instance['image_size'] );
+		$instance['number']     = absint( $new_instance['number'] );
 		return $instance;
+	}
+
+	private function get_all_image_sizes() {
+		global $_wp_additional_image_sizes;
+	
+		$default_image_sizes = get_intermediate_image_sizes();
+
+		$image_sizes = [];
+
+		foreach ( $default_image_sizes as $size ) {
+			$image_sizes[ $size ][ 'width' ]  = intval( get_option( "{$size}_size_w" ) );
+			$image_sizes[ $size ][ 'height' ] = intval( get_option( "{$size}_size_h" ) );
+			$image_sizes[ $size ][ 'crop' ]   = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
+		}
+	
+		return array_merge( $image_sizes, $_wp_additional_image_sizes );
 	}
 
 	public function form( $instance ) {
@@ -159,13 +174,13 @@ class RecentPosts extends WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'img_size' ); ?>"><?php esc_html_e( 'Image size:', 'erocket' ); ?></label>
-			<select class="widefat" id="<?php echo $this->get_field_id( 'img_size' ); ?>" name="<?php echo $this->get_field_name( 'img_size' ); ?>">
+			<label for="<?php echo $this->get_field_id( 'image_size' ); ?>"><?php esc_html_e( 'Image size:', 'erocket' ); ?></label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'image_size' ); ?>" name="<?php echo $this->get_field_name( 'image_size' ); ?>">
 				<?php
-				global $_wp_additional_image_sizes;
-				foreach ( $_wp_additional_image_sizes as $size_name => $size_atts ) :
+				$image_sizes = $this->get_all_image_sizes();
+				foreach ( $image_sizes as $size_name => $size_atts ) :
 				?>
-					<option <?php selected( $size_name, $instance['img_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', $size_name, $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
+					<option <?php selected( $size_name, $instance['image_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', ucfirst( $size_name ), $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
