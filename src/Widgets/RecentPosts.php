@@ -38,7 +38,6 @@ class RecentPosts extends WP_Widget {
 			flex-direction: column;
 		}
 		.erp-vertical a {
-			flex: 0 0 100%;
 			width: 100%;
 			flex: 0 0 100%;
 			margin-right: 0;
