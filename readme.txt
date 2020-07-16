@@ -3,9 +3,9 @@ Contributors: elightup, gretathemes, rilwis
 Donate link: https://elightup.com
 Tags: theme, themes, widget, widgets, template, templates
 Requires at least: 5.4
-Tested up to: 5.4
+Tested up to: 5.4.2
 Requires PHP: 5.6
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,6 +32,10 @@ Extend your theme functionality with eRocket with various modules like custom wi
 == Screenshots ==
 
 == Changelog ==
+
+= 1.1.0 - 2020-07-16 =
+* Add vertical style and image size options for recent posts widget
+* Fix icon style in the contact widget when the address is long
 
 = 1.0.0 =
 * Initial version

@@ -7,7 +7,7 @@
  * Author URI:  https://elightup.com
  * Text Domain: erocket
  * Domain Path: /languages
- * Version:     1.0.0
+ * Version:     1.1.0
  */
 
 require __DIR__ . '/vendor/autoload.php';
