@@ -46,6 +46,8 @@ class ContactInfo extends WP_Widget_Text {
 		}
 		.eci-info svg {
 			width: 1em;
+			min-width: 1em;
+			max-width: 1em;
 			height: 1em;
 			margin-right: 4px;
 			margin-top: 4px;
@@ -116,7 +118,7 @@ class ContactInfo extends WP_Widget_Text {
 
 		$services = block_core_social_link_services();
 		foreach ( $services as $key => $service ) {
-			$instance[ $key ] = sanitize_url( $new_instance[ $key ] );
+			$instance[ $key ] = esc_url_raw( $new_instance[ $key ] );
 		}
 
 		return array_filter( $instance );
