@@ -34,20 +34,21 @@ class RecentPosts extends WP_Widget {
 		.erp li:not(:last-child) {
 			margin-bottom: 16px;
 		}
+		.erp img {
+			display: block;
+		}
 		.erp-vertical {
 			flex-direction: column;
 		}
-		.erp-vertical a {
-			width: 100%;
-			flex: 0 0 100%;
-			margin-right: 0;
+		.erp-vertical > a {
+			display: block;
+			margin-bottom: 12px;
 		}
 		.erp-horizontal > a {
 			display: block;
 			margin-right: 12px;
 		}
 		.erp-horizontal img {
-			display: block;
 			width: 64px;
 			height: 64px;
 		}
@@ -129,7 +130,7 @@ class RecentPosts extends WP_Widget {
 
 	private function get_all_image_sizes() {
 		global $_wp_additional_image_sizes;
-	
+
 		$default_image_sizes = get_intermediate_image_sizes();
 
 		$image_sizes = [];
@@ -139,7 +140,7 @@ class RecentPosts extends WP_Widget {
 			$image_sizes[ $size ][ 'height' ] = intval( get_option( "{$size}_size_h" ) );
 			$image_sizes[ $size ][ 'crop' ]   = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
 		}
-	
+
 		return array_merge( $image_sizes, $_wp_additional_image_sizes );
 	}
 
@@ -178,8 +179,9 @@ class RecentPosts extends WP_Widget {
 				<?php
 				$image_sizes = $this->get_all_image_sizes();
 				foreach ( $image_sizes as $size_name => $size_atts ) :
+					$name = ucwords( str_replace( ['-', '_'], ' ', $size_name ) );
 				?>
-					<option <?php selected( $size_name, $instance['image_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', ucfirst( $size_name ), $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
+					<option <?php selected( $size_name, $instance['image_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', $name, $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>
