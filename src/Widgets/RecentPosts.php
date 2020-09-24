@@ -14,6 +14,7 @@ class RecentPosts extends WP_Widget {
 			'style'      => 'horizontal',
 			'image_size' => 'thumbnail',
 			'number'     => 5,
+			'time'       => 'disable',
 		];
 
 		parent::__construct( 'erp', __( '[eRocket] Recent Posts', 'erocket' ), [
@@ -107,7 +108,7 @@ class RecentPosts extends WP_Widget {
 					<?php endif; ?>
 					<div class="erp-body">
 						<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-						<time><?php echo esc_html( get_the_date() ); ?></time>
+						<time class="<?php esc_attr_e( 'disable' === $instance['time'] ? 'erp-disable' : 'erp-enable', 'erocket' ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 					</div>
 				</li>
 			<?php endwhile; ?>
@@ -125,6 +126,7 @@ class RecentPosts extends WP_Widget {
 		$instance['style']      = sanitize_text_field( $new_instance['style'] );
 		$instance['image_size'] = sanitize_text_field( $new_instance['image_size'] );
 		$instance['number']     = absint( $new_instance['number'] );
+		$instance['time']       = sanitize_text_field( $new_instance['time'] );
 		return $instance;
 	}
 
@@ -183,6 +185,13 @@ class RecentPosts extends WP_Widget {
 				?>
 					<option <?php selected( $size_name, $instance['image_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', $name, $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
 				<?php endforeach; ?>
+			</select>
+		</p>
+		<p>
+			<label for="<?php echo $this->get_field_id( 'time' ); ?>"><?php esc_html_e( 'Post time:', 'erocket' ); ?></label>
+			<select class="widefat" id="<?php echo $this->get_field_id( 'time' ); ?>" name="<?php echo $this->get_field_name( 'time' ); ?>">
+				<option <?php selected( 'disable', $instance['time'] ); ?> value="disable"><?php esc_html_e( 'Disable', 'erocket' ); ?></option>
+				<option <?php selected( 'enable', $instance['time'] ); ?> value="enable"><?php esc_html_e( 'Enable', 'erocket' ); ?></option>
 			</select>
 		</p>
 		<p>
