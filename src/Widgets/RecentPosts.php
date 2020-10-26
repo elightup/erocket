@@ -14,7 +14,6 @@ class RecentPosts extends WP_Widget {
 			'style'      => 'horizontal',
 			'image_size' => 'thumbnail',
 			'number'     => 5,
-			'time'       => 'disable',
 		];
 
 		parent::__construct( 'erp', __( '[eRocket] Recent Posts', 'erocket' ), [
@@ -108,7 +107,13 @@ class RecentPosts extends WP_Widget {
 					<?php endif; ?>
 					<div class="erp-body">
 						<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-						<time class="<?php esc_attr_e( 'disable' === $instance['time'] ? 'erp-disable' : 'erp-enable', 'erocket' ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
+						<?php 
+							if( 'on' == $instance[ 'time' ] ) {
+							?>
+							<time class="time"><?php echo esc_html( get_the_date() ); ?></time>
+							<?php
+							}
+						?>
 					</div>
 				</li>
 			<?php endwhile; ?>
@@ -126,7 +131,7 @@ class RecentPosts extends WP_Widget {
 		$instance['style']      = sanitize_text_field( $new_instance['style'] );
 		$instance['image_size'] = sanitize_text_field( $new_instance['image_size'] );
 		$instance['number']     = absint( $new_instance['number'] );
-		$instance['time']       = sanitize_text_field( $new_instance['time'] );
+		$instance['time']       = $new_instance['time'];
 		return $instance;
 	}
 
@@ -188,15 +193,14 @@ class RecentPosts extends WP_Widget {
 			</select>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'time' ); ?>"><?php esc_html_e( 'Post time:', 'erocket' ); ?></label>
-			<select class="widefat" id="<?php echo $this->get_field_id( 'time' ); ?>" name="<?php echo $this->get_field_name( 'time' ); ?>">
-				<option <?php selected( 'disable', $instance['time'] ); ?> value="disable"><?php esc_html_e( 'Disable', 'erocket' ); ?></option>
-				<option <?php selected( 'enable', $instance['time'] ); ?> value="enable"><?php esc_html_e( 'Enable', 'erocket' ); ?></option>
-			</select>
+			<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo esc_attr( $instance['number'] ); ?>" size="3">
+			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts to show:', 'erocket' ); ?></label>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts to show:', 'erocket' ); ?></label>
-			<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo esc_attr( $instance['number'] ); ?>" size="3">
+			<label for="<?php echo $this->get_field_id( 'time' ); ?>">
+				<input type="checkbox" id="<?php echo $this->get_field_id( 'time' ); ?>" name="<?php echo $this->get_field_name( 'time' ); ?>" <?php checked( $instance[ 'time' ], 'on' ); ?>/>
+				<?php esc_html_e( 'Hide post date', 'erocket' ); ?>
+			</label>
 		</p>
 		<?php
 	}
