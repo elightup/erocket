@@ -128,8 +128,7 @@ class Sharing {
 		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], ['before', 'after', 'both'] ) ? $_POST['sharing_position'] : 'after';
 
 		// Make sure post types valid and exist.
-		$no_sharing_types = array();
-		$sharing_types = isset( $_POST['sharing_types'] ) && is_array( $_POST['sharing_types'] ) ? $_POST['sharing_types'] : $no_sharing_types;
+		$sharing_types = isset( $_POST['sharing_types'] ) && is_array( $_POST['sharing_types'] ) ? $_POST['sharing_types'] : [];
 		$sharing_types = array_filter( $sharing_types, function( $post_type ) {
 			return post_type_exists( $post_type );
 		} );
