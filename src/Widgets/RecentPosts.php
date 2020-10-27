@@ -14,6 +14,7 @@ class RecentPosts extends WP_Widget {
 			'style'      => 'horizontal',
 			'image_size' => 'thumbnail',
 			'number'     => 5,
+			'hide_date'  => false,
 		];
 
 		parent::__construct( 'erp', __( '[eRocket] Recent Posts', 'erocket' ), [
@@ -107,13 +108,9 @@ class RecentPosts extends WP_Widget {
 					<?php endif; ?>
 					<div class="erp-body">
 						<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-						<?php 
-							if( 'on' == $instance[ 'time' ] ) {
-							?>
-							<time class="time"><?php echo esc_html( get_the_date() ); ?></time>
-							<?php
-							}
-						?>
+						<?php if ( ! $instance['hide_date'] ) : ?>
+							<time class="time"><?= esc_html( get_the_date() ); ?></time>
+						<?php endif; ?>
 					</div>
 				</li>
 			<?php endwhile; ?>
@@ -131,11 +128,11 @@ class RecentPosts extends WP_Widget {
 		$instance['style']      = sanitize_text_field( $new_instance['style'] );
 		$instance['image_size'] = sanitize_text_field( $new_instance['image_size'] );
 		$instance['number']     = absint( $new_instance['number'] );
-		$instance['time']       = $new_instance['time'];
+		$instance['hide_date']  = (bool) $new_instance['hide_date'];
 		return $instance;
 	}
 
-	private function get_all_image_sizes() {
+	private function get_image_sizes() {
 		global $_wp_additional_image_sizes;
 
 		$default_image_sizes = get_intermediate_image_sizes();
@@ -184,7 +181,7 @@ class RecentPosts extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'image_size' ); ?>"><?php esc_html_e( 'Image size:', 'erocket' ); ?></label>
 			<select class="widefat" id="<?php echo $this->get_field_id( 'image_size' ); ?>" name="<?php echo $this->get_field_name( 'image_size' ); ?>">
 				<?php
-				$image_sizes = $this->get_all_image_sizes();
+				$image_sizes = $this->get_image_sizes();
 				foreach ( $image_sizes as $size_name => $size_atts ) :
 					$name = ucwords( str_replace( ['-', '_'], ' ', $size_name ) );
 				?>
@@ -194,11 +191,11 @@ class RecentPosts extends WP_Widget {
 		</p>
 		<p>
 			<input class="tiny-text" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="number" step="1" min="1" value="<?php echo esc_attr( $instance['number'] ); ?>" size="3">
-			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts to show:', 'erocket' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php esc_html_e( 'Number of posts', 'erocket' ); ?></label>
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'time' ); ?>">
-				<input type="checkbox" id="<?php echo $this->get_field_id( 'time' ); ?>" name="<?php echo $this->get_field_name( 'time' ); ?>" <?php checked( $instance[ 'time' ], 'on' ); ?>/>
+			<label for="<?php echo $this->get_field_id( 'hide_date' ); ?>">
+				<input type="checkbox" id="<?php echo $this->get_field_id( 'hide_date' ); ?>" name="<?php echo $this->get_field_name( 'hide_date' ); ?>" value="1" <?php checked( $instance['hide_date'] ); ?>/>
 				<?php esc_html_e( 'Hide post date', 'erocket' ); ?>
 			</label>
 		</p>
