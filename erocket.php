@@ -13,3 +13,4 @@
 require __DIR__ . '/vendor/autoload.php';
 
 new ERocket\Loader;
+new ERocket\FeaturedPosts;
