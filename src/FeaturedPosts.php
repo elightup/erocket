@@ -344,9 +344,47 @@ use ERocket\Constants;
 					'priority'       => 40,
 				)
 			);
+			$wp_customize-> add_setting(
+				'show-style',
+				array(
+					'default' 	=> 'horizontal',
+				)
+			);
+			$wp_customize->add_control(
+				'show-style',
+				array(
+					'label' 			=> esc_html__( 'Style featured posts', 'erocket' ),
+					'section' 			=> 'FeaturedPosts',
+					'theme_supports' 	=> 'featuredposts',
+					'type' 				=> 'select',
+					'choices' 			=> array(
+						'horizontal' 	=> 'Style 1',
+						'vertical' 		=> 'Style 2',
+					),
+				)
+			);
+			$wp_customize-> add_setting(
+				'style-images',
+				array(
+					'default' 	=> 'horizontal',
+				)
+			);
+			$wp_customize->add_control(
+				'style-images',
+				array(
+					'label' 			=> esc_html__( 'Style featured posts', 'erocket' ),
+					'section' 			=> 'FeaturedPosts',
+					'theme_supports' 	=> 'featuredposts',
+					'type' 				=> 'select',
+					'choices' 			=> array(
+						'horizontal' 	=> 'Horizontal',
+						'vertical' 		=> 'Vertical',
+					),
+				)
+			);
 		}
 		public static function enqueue_scripts() {
-			wp_enqueue_script( 'featuredposts-suggest', plugins_url( 'js/suggest.js', __FILE__ ), array( 'suggest' ), '20131022', true );
+			//wp_enqueue_script( 'featuredposts-suggest', plugins_url( 'js/suggest.js', __FILE__ ), array( 'suggest' ), '20131022', true );
 		}
 		public static function render_form() {
 			printf( __( 'The settings for Featured Content have <a href="%s">moved to Appearance &rarr; Customize</a>.', 'erocket' ), admin_url( 'customize.php?#accordion-section-FeaturedPosts' ) );
@@ -361,6 +399,7 @@ use ERocket\Constants;
 					'tag-id'   => 0,
 					'tag-name' => '',
 					'show-all' => 0,
+					'show-style' => '',
 				)
 			);
 
@@ -397,6 +436,8 @@ use ERocket\Constants;
 			$output['hide-tag'] = isset( $input['hide-tag'] ) && $input['hide-tag'] ? 1 : 0;
 
 			$output['show-all'] = isset( $input['show-all'] ) && $input['show-all'] ? 1 : 0;
+
+			$output['show-style'] = isset( $input['show-style'] ) && $input['show-style'] ? 1 : 0;
 
 			self::delete_transient();
 
