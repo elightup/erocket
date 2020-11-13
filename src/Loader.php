@@ -12,5 +12,6 @@ class Loader {
 	public function register_widgets() {
 		register_widget( __NAMESPACE__ . '\Widgets\ContactInfo' );
 		register_widget( __NAMESPACE__ . '\Widgets\RecentPosts' );
+		register_widget( __NAMESPACE__ . '\Widgets\SocialMedia' );
 	}
 }

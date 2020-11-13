@@ -363,25 +363,7 @@ use ERocket\Constants;
 					),
 				)
 			);
-			$wp_customize-> add_setting(
-				'style-images',
-				array(
-					'default' 	=> 'horizontal',
-				)
-			);
-			$wp_customize->add_control(
-				'style-images',
-				array(
-					'label' 			=> esc_html__( 'Style featured posts', 'erocket' ),
-					'section' 			=> 'FeaturedPosts',
-					'theme_supports' 	=> 'featuredposts',
-					'type' 				=> 'select',
-					'choices' 			=> array(
-						'horizontal' 	=> 'Horizontal',
-						'vertical' 		=> 'Vertical',
-					),
-				)
-			);
+
 		}
 		public static function enqueue_scripts() {
 			//wp_enqueue_script( 'featuredposts-suggest', plugins_url( 'js/suggest.js', __FILE__ ), array( 'suggest' ), '20131022', true );

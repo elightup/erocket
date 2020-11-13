@@ -90,6 +90,12 @@ class ContactInfo extends WP_Widget_Text {
 				<a href="tel:<?= esc_attr( preg_replace( '/[^\+0-9]/', '', $instance['phone'] ) ); ?>"><?= esc_html( $instance['phone'] ); ?></a>
 			</div>
 		<?php endif; ?>
+		<?php if ( ! empty( $instance[ 'support' ] ) ) : ?>
+			<div class="eci-info">
+				<?php $this->output_svg( 'support' ); ?>
+				<a href="<?= esc_attr( $instance['support'] ); ?>"><?= esc_html( $instance['support'] ); ?></a>
+			</div>
+		<?php endif; ?>
 
 		<?php $services = array_intersect_key( $instance, block_core_social_link_services() ); ?>
 		<?php if ( ! empty( $services ) ) : ?>
@@ -115,6 +121,7 @@ class ContactInfo extends WP_Widget_Text {
 		$instance['address'] = sanitize_text_field( $new_instance['address'] );
 		$instance['email']   = is_email( $new_instance['email'] ) ? $new_instance['email'] : '';
 		$instance['phone']   = sanitize_text_field( $new_instance['phone'] );
+		$instance['support']   = sanitize_text_field( $new_instance['support'] );
 
 		$services = block_core_social_link_services();
 		foreach ( $services as $key => $service ) {
@@ -140,6 +147,10 @@ class ContactInfo extends WP_Widget_Text {
 		<p>
 			<label for="<?= $this->get_field_id( 'phone' ); ?>"><?php esc_html_e( 'Phone:', 'erocket' ); ?></label>
 			<input class="widefat" id="<?= $this->get_field_id( 'phone' ); ?>" name="<?= $this->get_field_name( 'phone' ); ?>" type="text" value="<?= esc_attr( $instance['phone'] ); ?>">
+		</p>
+		<p>
+			<label for="<?= $this->get_field_id( 'support' ); ?>"><?php esc_html_e( 'Support:', 'erocket' ); ?></label>
+			<input class="widefat" id="<?= $this->get_field_id( 'support' ); ?>" name="<?= $this->get_field_name( 'support' ); ?>" type="text" value="<?= esc_attr( $instance['support'] ); ?>">
 		</p>
 		<?php $services = block_core_social_link_services(); ?>
 		<?php foreach ( $services as $key => $service ) : ?>
