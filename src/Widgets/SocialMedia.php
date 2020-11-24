@@ -1,75 +1,70 @@
 <?php
-/**
- * SVG icons: Boxicons https://boxicons.com/, (C) CC 4.0.
- * Using icons with square dimension (width = height)
- */
 namespace ERocket\Widgets;
-
-use WP_Widget_Text;
 use WP_Widget;
 
-class SocialMedia extends WP_Widget_Text {
-	private $services;
-	private $defaults;
+class SocialMedia extends WP_Widget {
+	/**
+	 * Default widget options.
+	 *
+	 * @var array
+	 */
+	protected $defaults;
 
+	/**
+	 * Widget setup.
+	 */
 	public function __construct() {
-		$this->defaults = [
-			'title'   => __( 'Social Media', 'erocket' ),
-			'text'    => '',
-			'address' => '',
-			'email'   => '',
-			'phone'   => '',
-		];
-
-		$widget_ops  = [
-			'classname' => 'esm',
-		];
-		$control_ops = [
-			'width'  => 400,
-			'height' => 350,
-		];
-
-		WP_Widget::__construct( 'esm', __( '[eRocket] Social Media', 'erocket' ), $widget_ops, $control_ops );
-
-		if ( is_active_widget( false, false, $this->id_base ) || is_customize_preview() ) {
-			add_action( 'wp_head', [ $this, 'output_style' ] );
-		}
+		$this->defaults = array(
+			'title'       => esc_html__( 'Social Media', 'erocket' ),
+		);
+		parent::__construct(
+			'esm',
+			esc_html__( '[eRocket] Social Media', 'erocket' ),
+			array(
+				'description' => esc_html__( 'A widget that displays your child category from all categories or a category', 'erocket' ),
+			)
+		);
 	}
 
-	public function output_style() {
-		?>
-		<style>
-
-		</style>
-		<?php
-	}
-
+	/**
+	 * How to display the widget on the screen.
+	 *
+	 * @param array $args     Widget parameters.
+	 * @param array $instance Widget instance.
+	 */
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults );
-
-		$after_widget = $args['after_widget'];
-		$args['after_widget'] = '';
-
-		parent::widget( $args, $instance );
+		$title = apply_filters( 'widget_title', $instance['title'] );
 		?>
-		<?php $services = array_intersect_key( $instance, block_core_social_link_services() ); ?>
-		<?php if ( ! empty( $services ) ) : ?>
-			<ul class="wp-block-social-links esm-profiles">
-				<?php
-				foreach ( $services as $service => $url ) {
-					echo render_block_core_social_link( [
-						'service' => $service,
-						'url'     => $url,
-					] );
-				}
-				?>
-			</ul>
-		<?php endif; ?>
-
+		<section id="esm-2" class="widget esm">
+			<h2 class="widget-title"><?= $title; ?></h2>
+			<?php
+			$services = array_intersect_key( $instance, block_core_social_link_services() );
+			if ( ! empty( $services ) ) : ?>
+				<ul class="wp-block-social-links esm-profiles">
+					<?php
+					foreach ( $services as $service => $url ) {
+						echo render_block_core_social_link( [
+							'service' => $service,
+							'url'     => $url,
+						] );
+					}
+					?>
+				</ul>
+			<?php endif;
+			?>
+		</section>
 		<?php
-		echo $after_widget;
 	}
 
+	/**
+	 * Update the widget settings.
+	 *
+	 * @param array $new_instance New widget instance.
+	 * @param array $old_instance Old widget instance.
+	 *
+	 * @return array
+	 */
 	public function update( $new_instance, $old_instance ) {
 		$instance = parent::update( $new_instance, $old_instance );
 		$instance['title'] = sanitize_text_field( $new_instance['title'] );
@@ -82,9 +77,15 @@ class SocialMedia extends WP_Widget_Text {
 		return array_filter( $instance );
 	}
 
+	/**
+	 * Widget form.
+	 *
+	 * @param array $instance Widget instance.
+	 *
+	 * @return void
+	 */
 	public function form( $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults );
-
 		?>
 		<p>
 			<label for="<?= $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'erocket' ); ?></label>
@@ -101,8 +102,5 @@ class SocialMedia extends WP_Widget_Text {
 		<?php endforeach; ?>
 		<?php
 	}
-
-	private function output_svg( $key ) {
-		echo file_get_contents( EROCKET_DIR . "/img/$key.svg" );
-	}
 }
+

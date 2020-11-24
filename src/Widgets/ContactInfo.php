@@ -9,7 +9,7 @@ use WP_Widget_Text;
 use WP_Widget;
 
 class ContactInfo extends WP_Widget_Text {
-	private $services;
+
 	private $defaults;
 
 	public function __construct() {
