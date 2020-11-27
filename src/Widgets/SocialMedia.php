@@ -21,7 +21,7 @@ class SocialMedia extends WP_Widget {
 			'esm',
 			esc_html__( '[eRocket] Social Media', 'erocket' ),
 			array(
-				'description' => esc_html__( 'A widget that displays your child category from all categories or a category', 'erocket' ),
+				'description' => esc_html__( '[eRocket] Social Media', 'erocket' ),
 			)
 		);
 	}
