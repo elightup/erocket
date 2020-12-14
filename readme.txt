@@ -3,9 +3,9 @@ Contributors: elightup, gretathemes, rilwis
 Donate link: https://elightup.com
 Tags: theme, themes, widget, widgets, template, templates
 Requires at least: 5.4
-Tested up to: 5.5.1
+Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.1.3
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,10 @@ Extend your theme functionality with eRocket with various modules like custom wi
 == Screenshots ==
 
 == Changelog ==
+
+= 1.2.0 - 2020-11-14 =
+* Added Social Media widget
+* Fix render_block_core_social_link() error on WP version 5.6
 
 = 1.1.1 - 2020-10-27 =
 * Add option to hide post date for recent posts widget
