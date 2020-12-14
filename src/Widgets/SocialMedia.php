@@ -14,15 +14,15 @@ class SocialMedia extends WP_Widget {
 	 * Widget setup.
 	 */
 	public function __construct() {
-		$this->defaults = array(
-			'title'       => esc_html__( 'Social Media', 'erocket' ),
-		);
+		$this->defaults = [
+			'title' => esc_html__( 'Social Media', 'erocket' ),
+		];
 		parent::__construct(
 			'esm',
 			esc_html__( '[eRocket] Social Media', 'erocket' ),
-			array(
+			[
 				'description' => esc_html__( '[eRocket] Social Media', 'erocket' ),
-			)
+			]
 		);
 	}
 
@@ -34,11 +34,11 @@ class SocialMedia extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults );
-		$title = apply_filters( 'widget_title', $instance['title'] );
-		?>
-		<section id="esm-2" class="widget esm">
-			<h2 class="widget-title"><?= $title; ?></h2>
-			<?php
+		echo $args['before_widget'];
+		if ( $instance['title'] ) {
+			echo $args['before_title'] . $instance['title'] . $args['after_title'];
+		}
+
 			$services = array_intersect_key( $instance, block_core_social_link_services() );
 			if ( ! empty( $services ) ) : ?>
 				<ul class="wp-block-social-links esm-profiles">
@@ -52,9 +52,8 @@ class SocialMedia extends WP_Widget {
 					?>
 				</ul>
 			<?php endif;
-			?>
-		</section>
-		<?php
+
+		echo $args['after_widget'];
 	}
 
 	/**
