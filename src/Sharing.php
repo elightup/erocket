@@ -173,7 +173,7 @@ class Sharing {
 				'service' => $key,
 				'url'     => $url,
 				'label'   => $service['title'],
-			] );
+			], 'content', 'block' );
 		}
 
 		return "<ul class='wp-block-social-links es-buttons'>$html</ul>";

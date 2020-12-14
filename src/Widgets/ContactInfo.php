@@ -105,7 +105,7 @@ class ContactInfo extends WP_Widget_Text {
 					echo render_block_core_social_link( [
 						'service' => $service,
 						'url'     => $url,
-					] );
+					], 'content', 'block' );
 				}
 				?>
 			</ul>
