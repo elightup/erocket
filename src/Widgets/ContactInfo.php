@@ -19,6 +19,7 @@ class ContactInfo extends WP_Widget_Text {
 			'address' => '',
 			'email'   => '',
 			'phone'   => '',
+			'support' => '',
 		];
 
 		$widget_ops  = [
@@ -121,7 +122,7 @@ class ContactInfo extends WP_Widget_Text {
 		$instance['address'] = sanitize_text_field( $new_instance['address'] );
 		$instance['email']   = is_email( $new_instance['email'] ) ? $new_instance['email'] : '';
 		$instance['phone']   = sanitize_text_field( $new_instance['phone'] );
-		$instance['support']   = sanitize_text_field( $new_instance['support'] );
+		$instance['support'] = sanitize_text_field( $new_instance['support'] );
 
 		$services = block_core_social_link_services();
 		foreach ( $services as $key => $service ) {
