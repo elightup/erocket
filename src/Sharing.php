@@ -64,6 +64,13 @@ class Sharing {
 
 				<table class="form-table">
 					<tr>
+						<th><?php esc_html_e( 'Share on', 'erocket' ); ?></th>
+						<td>
+							<?php $share_text = isset( $option['share_text'] ) ? $option['share_text'] : ''; ?>
+							<input type="text" name="share_text" value="<?php echo esc_attr( $share_text ); ?>" placeholder="<?= esc_html_e( 'Share on', 'erocket' ); ?>">
+						</td>
+					</tr>
+					<tr>
 						<th><?php esc_html_e( 'Social Networks', 'erocket' ); ?></th>
 						<td>
 							<?php $selected = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services ); ?>
@@ -117,6 +124,7 @@ class Sharing {
 		if ( empty( $_POST['submit'] ) || ! check_ajax_referer( 'save', false, false ) ) {
 			return;
 		}
+		$share_text = isset( $_POST['share_text'] ) ? $_POST['share_text'] : '';
 
 		// Make sure selected services are in the predefined list.
 		$sharing_services = isset( $_POST['sharing_services'] ) && is_array( $_POST['sharing_services'] ) ? $_POST['sharing_services'] : [];
@@ -133,7 +141,7 @@ class Sharing {
 			return post_type_exists( $post_type );
 		} );
 
-		update_option( 'erocket', compact( 'sharing_services', 'sharing_position', 'sharing_types' ) );
+		update_option( 'erocket', compact( 'share_text', 'sharing_services', 'sharing_position', 'sharing_types' ) );
 	}
 
 	public function output( $content ) {
@@ -160,12 +168,17 @@ class Sharing {
 		$option   = get_option( 'erocket' );
 		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
 		$services = array_intersect( $services, array_keys( $this->services ) );
+		$share_text = isset( $option['share_text'] ) ? $option['share_text'] : '';
 
 		if ( empty( $services ) ) {
 			return '';
 		}
+		if ( empty( $share_text ) ) {
+			$html = '';
+		}else {
+			$html = '<span>'.$share_text.':</span>';
+		}
 
-		$html = '';
 		foreach ( $services as $key ) {
 			$service  = $this->services[ $key ];
 			$url      = sprintf( $service['url'], get_permalink() );

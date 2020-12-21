@@ -144,7 +144,7 @@ class FeaturedPosts {
 		$wp_customize-> add_setting(
 			'show-style',
 			array(
-				'default' 	=> 'horizontal',
+				'default' 	=> 'style2',
 			)
 		);
 		$wp_customize->add_control(
@@ -155,8 +155,8 @@ class FeaturedPosts {
 				'theme_supports' 	=> 'featuredposts',
 				'type' 				=> 'select',
 				'choices' 			=> array(
-					'horizontal' 	=> 'Style 1',
-					'vertical' 		=> 'Style 2',
+					'style1' 		=> 'Style 1',
+					'style2' 		=> 'Style 2',
 				),
 			)
 		);
