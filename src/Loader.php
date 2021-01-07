@@ -7,7 +7,7 @@ class Loader {
 
 		add_action( 'widgets_init', [ $this, 'register_widgets' ] );
 		new Sharing;
-		FeaturedPosts::setup();
+		new FeaturedPosts;
 	}
 
 	public function register_widgets() {
