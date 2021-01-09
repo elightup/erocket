@@ -2,10 +2,10 @@
 namespace ERocket;
 
 class Sharing {
-	private $services;
+	private static $services;
 
 	public function __construct() {
-		$this->services = [
+		self::$services = [
 			'facebook' => [
 				'label' => __( 'Facebook', 'erocket' ),
 				'title' => __( 'Share on Facebook', 'erocket' ),
@@ -145,11 +145,11 @@ class Sharing {
 	}
 
 	public function output( $content ) {
-		if ( ! $this->is_enabled() ) {
+		if ( ! self::is_enabled() ) {
 			return $content;
 		}
 
-		$html     = $this->get_html();
+		$html     = self::get_html();
 		$option   = get_option( 'erocket' );
 		$position = isset( $option['sharing_position'] ) ? $option['sharing_position'] : 'after';
 
@@ -164,10 +164,10 @@ class Sharing {
 		return $content;
 	}
 
-	private function get_html() {
+	public static function get_html() {
 		$option   = get_option( 'erocket' );
-		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
-		$services = array_intersect( $services, array_keys( $this->services ) );
+		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( self::$services );
+		$services = array_intersect( $services, array_keys( self::$services ) );
 		$share_text = isset( $option['share_text'] ) ? $option['share_text'] : '';
 
 		if ( empty( $services ) ) {
@@ -180,7 +180,7 @@ class Sharing {
 		}
 
 		foreach ( $services as $key ) {
-			$service  = $this->services[ $key ];
+			$service  = self::$services[ $key ];
 			$url      = sprintf( $service['url'], get_permalink() );
 			$html    .= render_block_core_social_link( [
 				'service' => $key,
@@ -192,11 +192,11 @@ class Sharing {
 		return "<ul class='wp-block-social-links es-buttons'>$html</ul>";
 	}
 
-	private function is_enabled() {
+	private static function is_enabled() {
 		$option   = get_option( 'erocket' );
 		$types    = isset( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
-		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
-		$services = array_intersect( $services, array_keys( $this->services ) );
+		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( self::$services );
+		$services = array_intersect( $services, array_keys( self::$services ) );
 
 		return is_singular() && in_array( get_post_type(), $types ) && ! empty( $services );
 	}
