@@ -2,10 +2,10 @@
 namespace ERocket;
 
 class Sharing {
-	private static $services;
+	private $services;
 
 	public function __construct() {
-		self::$services = [
+		$this->services = [
 			'facebook' => [
 				'label' => __( 'Facebook', 'erocket' ),
 				'title' => __( 'Share on Facebook', 'erocket' ),
@@ -45,6 +45,7 @@ class Sharing {
 
 		add_action( 'admin_menu', [ $this, 'add_settings_page' ] );
 		add_filter( 'the_content', [ $this, 'output' ] );
+		add_action( 'erocket_sharing_ouput', [ $this, 'output_html' ] );
 	}
 
 	public function add_settings_page() {
@@ -145,11 +146,11 @@ class Sharing {
 	}
 
 	public function output( $content ) {
-		if ( ! self::is_enabled() ) {
+		if ( ! $this->is_enabled() ) {
 			return $content;
 		}
 
-		$html     = self::get_html();
+		$html     = $this->get_html();
 		$option   = get_option( 'erocket' );
 		$position = isset( $option['sharing_position'] ) ? $option['sharing_position'] : 'after';
 
@@ -164,10 +165,15 @@ class Sharing {
 		return $content;
 	}
 
-	public static function get_html() {
+	public function output_html() {
+		$html = $this->get_html();
+		echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+
+	private function get_html() {
 		$option   = get_option( 'erocket' );
-		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( self::$services );
-		$services = array_intersect( $services, array_keys( self::$services ) );
+		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
+		$services = array_intersect( $services, array_keys( $this->services ) );
 		$share_text = isset( $option['share_text'] ) ? $option['share_text'] : '';
 
 		if ( empty( $services ) ) {
@@ -180,7 +186,7 @@ class Sharing {
 		}
 
 		foreach ( $services as $key ) {
-			$service  = self::$services[ $key ];
+			$service  = $this->services[ $key ];
 			$url      = sprintf( $service['url'], get_permalink() );
 			$html    .= render_block_core_social_link( [
 				'service' => $key,
@@ -192,12 +198,12 @@ class Sharing {
 		return "<ul class='wp-block-social-links es-buttons'>$html</ul>";
 	}
 
-	private static function is_enabled() {
+	private function is_enabled() {
 		$option   = get_option( 'erocket' );
 		$types    = isset( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
-		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( self::$services );
-		$services = array_intersect( $services, array_keys( self::$services ) );
+		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
+		$services = array_intersect( $services, array_keys( $this->services ) );
 
-		return is_singular() && in_array( get_post_type(), $types ) && ! empty( $services );
+		return apply_filters( 'erocket_enable_sharing', is_singular() && in_array( get_post_type(), $types ) && ! empty( $services ) );
 	}
 }
