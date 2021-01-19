@@ -5,7 +5,7 @@ Tags: theme, themes, widget, widgets, template, templates
 Requires at least: 5.4
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,10 @@ Extend your theme functionality with eRocket with various modules like custom wi
 == Screenshots ==
 
 == Changelog ==
+
+= 1.2.1 - 2021-01-19 =
+* Moving sharing
+* Fix render_block_core_social_link() error on PHP 7.4
 
 = 1.2.0 - 2020-11-14 =
 * Added Social Media widget
