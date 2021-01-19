@@ -44,10 +44,16 @@ class SocialMedia extends WP_Widget {
 				<ul class="wp-block-social-links esm-profiles">
 					<?php
 					foreach ( $services as $service => $url ) {
+						$parsed_block = new \WP_Block_Parser_Block( 'core/social-links', [
+							'service' => $service,
+							'url'     => $url,
+						], [], '', [] );
+						\WP_Block_Supports::$block_to_render = (array) $parsed_block;
+						$block = new \WP_Block( (array) $parsed_block );
 						echo render_block_core_social_link( [
 							'service' => $service,
 							'url'     => $url,
-						], 'content', 'block' );
+						], 'content', $block );
 					}
 					?>
 				</ul>
