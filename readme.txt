@@ -5,7 +5,7 @@ Tags: theme, themes, widget, widgets, template, templates
 Requires at least: 5.4
 Tested up to: 5.8.1
 Requires PHP: 5.6
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,9 @@ Extend your theme functionality with eRocket with various modules like custom wi
 == Screenshots ==
 
 == Changelog ==
+
+= 1.2.3 - 2021-11-04 =
+* Fix social media widgets warnings on new WP version
 
 = 1.2.2 - 2021-11-04 =
 * Fix social sharing warnings on new WP version

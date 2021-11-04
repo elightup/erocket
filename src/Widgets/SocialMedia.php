@@ -39,25 +39,20 @@ class SocialMedia extends WP_Widget {
 			echo $args['before_title'] . $instance['title'] . $args['after_title'];
 		}
 
-			$services = array_intersect_key( $instance, block_core_social_link_services() );
-			if ( ! empty( $services ) ) : ?>
-				<ul class="wp-block-social-links esm-profiles">
-					<?php
-					foreach ( $services as $service => $url ) {
-						$parsed_block = new \WP_Block_Parser_Block( 'core/social-links', [
-							'service' => $service,
-							'url'     => $url,
-						], [], '', [] );
-						\WP_Block_Supports::$block_to_render = (array) $parsed_block;
-						$block = new \WP_Block( (array) $parsed_block );
-						echo render_block_core_social_link( [
-							'service' => $service,
-							'url'     => $url,
-						], 'content', $block );
-					}
-					?>
-				</ul>
-			<?php endif;
+		$services = array_intersect_key( $instance, block_core_social_link_services() );
+		if ( ! empty( $services ) ) {
+			$blocks = '<!-- wp:social-links --><ul class="wp-block-social-links esm-profiles">';
+			foreach ( $services as $service => $url ) {
+				$attributes = [
+					'service' => $service,
+					'url'     => $url,
+				];
+				$blocks .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
+			}
+			$blocks .= '</ul><!-- /wp:social-links -->';
+
+			echo do_blocks( $blocks );
+		}
 
 		echo $args['after_widget'];
 	}
