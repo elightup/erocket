@@ -171,29 +171,30 @@ class Sharing {
 	}
 
 	private function get_html() {
-		$option   = get_option( 'erocket' );
-		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
-		$services = array_intersect( $services, array_keys( $this->services ) );
+		$option     = get_option( 'erocket' );
+		$services   = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
+		$services   = array_intersect( $services, array_keys( $this->services ) );
 		$share_text = isset( $option['share_text'] ) ? $option['share_text'] : '';
 
 		if ( empty( $services ) ) {
 			return '';
 		}
-		if ( empty( $share_text ) ) {
-			$html = '';
-		}else {
-			$html = '<span>'.$share_text.':</span>';
-		}
 
+		$html = $share_text ? '<span>' . $share_text . ':</span>' : '';
+
+		$blocks = '<!-- wp:social-links --><ul class="wp-block-social-links">';
 		foreach ( $services as $key ) {
-			$service  = $this->services[ $key ];
-			$url      = sprintf( $service['url'], get_permalink() );
-			$html    .= render_block_core_social_link( [
+			$service    = $this->services[ $key ];
+			$attributes = [
 				'service' => $key,
-				'url'     => $url,
+				'url'     => sprintf( $service['url'], get_permalink() ),
 				'label'   => $service['title'],
-			], 'content', 'block' );
+			];
+			$blocks .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
 		}
+		$blocks .= '</ul><!-- /wp:social-links -->';
+
+		$html .= do_blocks( $blocks );
 
 		return "<ul class='wp-block-social-links es-buttons'>$html</ul>";
 	}
