@@ -196,7 +196,7 @@ class Sharing {
 
 		$html .= do_blocks( $blocks );
 
-		return "<ul class='wp-block-social-links es-buttons'>$html</ul>";
+		return "<div class='es-buttons'>$html</div>";
 	}
 
 	private function is_enabled() {
