@@ -1,5 +1,6 @@
 <?php
 namespace ERocket\Widgets;
+
 use WP_Widget;
 
 class SocialMedia extends WP_Widget {
@@ -47,7 +48,7 @@ class SocialMedia extends WP_Widget {
 					'service' => $service,
 					'url'     => $url,
 				];
-				$blocks .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
+				$blocks    .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
 			}
 			$blocks .= '</ul><!-- /wp:social-links -->';
 
@@ -66,7 +67,7 @@ class SocialMedia extends WP_Widget {
 	 * @return array
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = parent::update( $new_instance, $old_instance );
+		$instance          = parent::update( $new_instance, $old_instance );
 		$instance['title'] = sanitize_text_field( $new_instance['title'] );
 
 		$services = block_core_social_link_services();
@@ -94,7 +95,8 @@ class SocialMedia extends WP_Widget {
 		<?php $services = block_core_social_link_services(); ?>
 		<?php
 
-		foreach ( $services as $key => $service ) : ?>
+		foreach ( $services as $key => $service ) :
+			?>
 			<p>
 				<label for="<?= $this->get_field_id( $key ); ?>"><?= esc_html( $service['name'] ); ?>:</label>
 				<input class="widefat" id="<?= $this->get_field_id( $key ); ?>" name="<?= $this->get_field_name( $key ); ?>" type="text" value="<?= isset( $instance[ $key ] ) ? esc_attr( $instance[ $key ] ) : ''; ?>">

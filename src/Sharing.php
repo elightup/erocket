@@ -6,17 +6,17 @@ class Sharing {
 
 	public function __construct() {
 		$this->services = [
-			'facebook' => [
+			'facebook'  => [
 				'label' => __( 'Facebook', 'erocket' ),
 				'title' => __( 'Share on Facebook', 'erocket' ),
 				'url'   => 'https://facebook.com/sharer/sharer.php?u=%s',
 			],
-			'twitter' => [
+			'twitter'   => [
 				'label' => __( 'Twitter', 'erocket' ),
 				'title' => __( 'Tweet on Twitter', 'erocket' ),
 				'url'   => 'https://twitter.com/intent/tweet?url=%s',
 			],
-			'linkedin' => [
+			'linkedin'  => [
 				'label' => __( 'LinkedIn', 'erocket' ),
 				'title' => __( 'Share on LinkedIn', 'erocket' ),
 				'url'   => 'https://www.linkedin.com/shareArticle?mini=true&url=%s',
@@ -26,20 +26,20 @@ class Sharing {
 				'title' => __( 'Pin on Pinterest', 'erocket' ),
 				'url'   => 'https://pinterest.com/pin/create/button/?url=%s',
 			],
-			'pocket' => [
+			'pocket'    => [
 				'label' => __( 'Pocket', 'erocket' ),
 				'title' => __( 'Save to pocket', 'erocket' ),
-				'url' => 'https://getpocket.com/save?url=%s',
+				'url'   => 'https://getpocket.com/save?url=%s',
 			],
-			'reddit' => [
+			'reddit'    => [
 				'label' => __( 'Reddit', 'erocket' ),
 				'title' => __( 'Share on Reddit', 'erocket' ),
-				'url' => 'https://www.reddit.com/submit?url=%s',
+				'url'   => 'https://www.reddit.com/submit?url=%s',
 			],
-			'mail' => [
+			'mail'      => [
 				'label' => __( 'Mail', 'erocket' ),
 				'title' => __( 'Share via Email', 'erocket' ),
-				'url' => 'mailto:?body=%s',
+				'url'   => 'mailto:?body=%s',
 			],
 		];
 
@@ -100,8 +100,8 @@ class Sharing {
 						<th><?php esc_html_e( 'Post Types', 'erocket' ); ?></th>
 						<td>
 							<?php
-							$selected = isset( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
-							$post_types = get_post_types( ['public' => true], 'objects' );
+							$selected   = isset( $option['sharing_types'] ) ? $option['sharing_types'] : [ 'post' ];
+							$post_types = get_post_types( [ 'public' => true ], 'objects' );
 							?>
 							<?php foreach ( $post_types as $slug => $post_type ) : ?>
 								<p>
@@ -134,7 +134,7 @@ class Sharing {
 		} );
 
 		// Validate position.
-		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], ['before', 'after', 'both'] ) ? $_POST['sharing_position'] : 'after';
+		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], [ 'before', 'after', 'both' ] ) ? $_POST['sharing_position'] : 'after';
 
 		// Make sure post types valid and exist.
 		$sharing_types = isset( $_POST['sharing_types'] ) && is_array( $_POST['sharing_types'] ) ? $_POST['sharing_types'] : [];
@@ -190,7 +190,7 @@ class Sharing {
 				'url'     => sprintf( $service['url'], get_permalink() ),
 				'label'   => $service['title'],
 			];
-			$blocks .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
+			$blocks    .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
 		}
 		$blocks .= '</ul><!-- /wp:social-links -->';
 
@@ -201,7 +201,7 @@ class Sharing {
 
 	private function is_enabled() {
 		$option   = get_option( 'erocket' );
-		$types    = isset( $option['sharing_types'] ) ? $option['sharing_types'] : ['post'];
+		$types    = isset( $option['sharing_types'] ) ? $option['sharing_types'] : [ 'post' ];
 		$services = isset( $option['sharing_services'] ) ? $option['sharing_services'] : array_keys( $this->services );
 		$services = array_intersect( $services, array_keys( $this->services ) );
 

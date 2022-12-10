@@ -35,7 +35,7 @@ class FeaturedPosts {
 			array(
 				'include'          => $post_ids,
 				'posts_per_page'   => count( $post_ids ),
-				'post_type'        => ['post'],
+				'post_type'        => [ 'post' ],
 				'suppress_filters' => false,
 			)
 		);

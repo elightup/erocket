@@ -99,7 +99,10 @@ class RecentPosts extends WP_Widget {
 		}
 		?>
 		<ul>
-			<?php while ( $query->have_posts() ) : $query->the_post(); ?>
+			<?php
+			while ( $query->have_posts() ) :
+				$query->the_post();
+				?>
 				<li class="<?php esc_attr_e( 'horizontal' === $instance['style'] ? 'erp-horizontal' : 'erp-vertical', 'erocket' ); ?>">
 					<?php if ( has_post_thumbnail() ) : ?>
 						<a href="<?php the_permalink(); ?>">
@@ -140,9 +143,9 @@ class RecentPosts extends WP_Widget {
 		$image_sizes = [];
 
 		foreach ( $default_image_sizes as $size ) {
-			$image_sizes[ $size ][ 'width' ]  = intval( get_option( "{$size}_size_w" ) );
-			$image_sizes[ $size ][ 'height' ] = intval( get_option( "{$size}_size_h" ) );
-			$image_sizes[ $size ][ 'crop' ]   = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
+			$image_sizes[ $size ]['width']  = intval( get_option( "{$size}_size_w" ) );
+			$image_sizes[ $size ]['height'] = intval( get_option( "{$size}_size_h" ) );
+			$image_sizes[ $size ]['crop']   = get_option( "{$size}_crop" ) ? get_option( "{$size}_crop" ) : false;
 		}
 
 		return array_merge( $image_sizes, $_wp_additional_image_sizes );
@@ -183,8 +186,8 @@ class RecentPosts extends WP_Widget {
 				<?php
 				$image_sizes = $this->get_image_sizes();
 				foreach ( $image_sizes as $size_name => $size_atts ) :
-					$name = ucwords( str_replace( ['-', '_'], ' ', $size_name ) );
-				?>
+					$name = ucwords( str_replace( [ '-', '_' ], ' ', $size_name ) );
+					?>
 					<option <?php selected( $size_name, $instance['image_size'] ); ?> value="<?php esc_html_e( $size_name, 'erocket' ); ?>"><?php printf( '%1s (%2sx%3s)', $name, $size_atts['width'], $size_atts['height'], 'erocket' ); ?></option>
 				<?php endforeach; ?>
 			</select>

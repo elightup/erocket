@@ -3,6 +3,7 @@
  * SVG icons: Boxicons https://boxicons.com/, (C) CC 4.0.
  * Using icons with square dimension (width = height)
  */
+
 namespace ERocket\Widgets;
 
 use WP_Widget_Text;
@@ -67,31 +68,31 @@ class ContactInfo extends WP_Widget_Text {
 	public function widget( $args, $instance ) {
 		$instance = wp_parse_args( $instance, $this->defaults );
 
-		$after_widget = $args['after_widget'];
+		$after_widget         = $args['after_widget'];
 		$args['after_widget'] = '';
 
 		parent::widget( $args, $instance );
 		?>
 
-		<?php if ( ! empty( $instance[ 'address' ] ) ) : ?>
+		<?php if ( ! empty( $instance['address'] ) ) : ?>
 			<div class="eci-info">
 				<?php $this->output_svg( 'map' ); ?>
 				<address><?= esc_html( $instance['address'] ); ?></address>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $instance[ 'email' ] ) ) : ?>
+		<?php if ( ! empty( $instance['email'] ) ) : ?>
 			<div class="eci-info">
 				<?= block_core_social_link_get_icon( 'mail' ); ?>
 				<a href="mailto:<?= esc_attr( $instance['email'] ); ?>"><?= esc_html( $instance['email'] ); ?></a>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $instance[ 'phone' ] ) ) : ?>
+		<?php if ( ! empty( $instance['phone'] ) ) : ?>
 			<div class="eci-info">
 				<?php $this->output_svg( 'phone' ); ?>
 				<a href="tel:<?= esc_attr( preg_replace( '/[^\+0-9]/', '', $instance['phone'] ) ); ?>"><?= esc_html( $instance['phone'] ); ?></a>
 			</div>
 		<?php endif; ?>
-		<?php if ( ! empty( $instance[ 'support' ] ) ) : ?>
+		<?php if ( ! empty( $instance['support'] ) ) : ?>
 			<div class="eci-info">
 				<?php $this->output_svg( 'support' ); ?>
 				<a href="<?= esc_attr( $instance['support'] ); ?>"><?= esc_html( $instance['support'] ); ?></a>
