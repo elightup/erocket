@@ -99,19 +99,22 @@ class ContactInfo extends WP_Widget_Text {
 			</div>
 		<?php endif; ?>
 
-		<?php $services = array_intersect_key( $instance, block_core_social_link_services() ); ?>
-		<?php if ( ! empty( $services ) ) : ?>
-			<ul class="wp-block-social-links eci-profiles">
-				<?php
-				foreach ( $services as $service => $url ) {
-					echo render_block_core_social_link( [
-						'service' => $service,
-						'url'     => $url,
-					], 'content', 'block' );
-				}
-				?>
-			</ul>
-		<?php endif; ?>
+		<?php
+		$services = array_intersect_key( $instance, block_core_social_link_services() );
+		if ( ! empty( $services ) ) {
+			$blocks = '<!-- wp:social-links --><ul class="wp-block-social-links eci-profiles">';
+			foreach ( $services as $service => $url ) {
+				$attributes = [
+					'service' => $service,
+					'url'     => $url,
+				];
+				$blocks    .= '<!-- wp:social-link ' . wp_json_encode( $attributes ) . ' /-->';
+			}
+			$blocks .= '</ul><!-- /wp:social-links -->';
+
+			echo do_blocks( $blocks );
+		}
+		?>
 
 		<?php
 		echo $after_widget;
