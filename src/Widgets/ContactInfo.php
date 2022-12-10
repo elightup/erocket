@@ -161,7 +161,7 @@ class ContactInfo extends WP_Widget_Text {
 		<?php foreach ( $services as $key => $service ) : ?>
 			<p>
 				<label for="<?= $this->get_field_id( $key ); ?>"><?= esc_html( $service['name'] ); ?>:</label>
-				<input class="widefat" id="<?= $this->get_field_id( $key ); ?>" name="<?= $this->get_field_name( $key ); ?>" type="text" value="<?= isset( $instance[ $key ] ) ? esc_attr( $instance[ $key ] ) : ''; ?>">
+				<input class="widefat" id="<?= $this->get_field_id( $key ); ?>" name="<?= $this->get_field_name( $key ); ?>" type="text" value="<?= esc_attr( $instance[ $key ] ?? '' ); ?>">
 			</p>
 		<?php endforeach; ?>
 		<?php

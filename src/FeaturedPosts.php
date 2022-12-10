@@ -1,6 +1,8 @@
 <?php
 namespace ERocket;
 
+use WP_Query;
+
 class FeaturedPosts {
 	public $quantity = 15;
 
@@ -31,14 +33,12 @@ class FeaturedPosts {
 			return [];
 		}
 
-		$featured_posts = get_posts(
-			array(
-				'include'          => $post_ids,
-				'posts_per_page'   => count( $post_ids ),
-				'post_type'        => [ 'post' ],
-				'suppress_filters' => false,
-			)
-		);
+		$featured_posts = get_posts( [
+			'include'          => $post_ids,
+			'posts_per_page'   => count( $post_ids ),
+			'post_type'        => [ 'post' ],
+			'suppress_filters' => false,
+		] );
 
 		return $featured_posts;
 	}
@@ -52,20 +52,18 @@ class FeaturedPosts {
 
 		$tag = $term ? $term->term_id : [];
 
-		$featured = new \WP_Query(
-			array(
-				'posts_per_page'   => $this->quantity,
-				'post_type'        => [ 'post' ],
-				'suppress_filters' => false,
-				'fields'           => 'ids',
-				'tax_query'        => array(
-					array(
-						'taxonomy' => 'post_tag',
-						'terms'    => $tag,
-					),
-				),
-			)
-		);
+		$featured = new WP_Query( [
+			'posts_per_page'   => $this->quantity,
+			'post_type'        => [ 'post' ],
+			'suppress_filters' => false,
+			'fields'           => 'ids',
+			'tax_query'        => [
+				[
+					'taxonomy' => 'post_tag',
+					'terms'    => $tag,
+				],
+			],
+		] );
 
 		if ( ! $featured->have_posts() ) {
 			return [];
@@ -85,28 +83,20 @@ class FeaturedPosts {
 	}
 
 	public function customize_register( $wp_customize ) {
-		$wp_customize->add_section(
-			'efp',
-			array(
-				'title'          => esc_html__( 'Featured Posts', 'erocket' ),
-				'description'    => sprintf( __( 'Easily feature all posts with the <a href="%1$s">"featured" tag</a> or a tag of your choice. Your theme supports up to %2$s posts in its featured content area.', 'erocket' ), admin_url( '/edit.php?tag=featured' ), absint( $this->quantity ) ),
-				'theme_supports' => 'efp',
-			)
-		);
-		$wp_customize->add_setting(
-			'efp[tag-name]',
-			array(
-				'type'              => 'option',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-		$wp_customize->add_control(
-			'efp[tag-name]',
-			array(
-				'label'          => esc_html__( 'Tag name', 'erocket' ),
-				'section'        => 'efp',
-				'theme_supports' => 'efp',
-			)
-		);
+		$wp_customize->add_section( 'efp', [
+			'title'          => esc_html__( 'Featured Posts', 'erocket' ),
+			// Translators: %1$s - URL, %2$s - quantity.
+			'description'    => sprintf( __( 'Easily feature all posts with the <a href="%1$s">"featured" tag</a> or a tag of your choice. Your theme supports up to %2$s posts in its featured content area.', 'erocket' ), admin_url( '/edit.php?tag=featured' ), absint( $this->quantity ) ),
+			'theme_supports' => 'efp',
+		] );
+		$wp_customize->add_setting( 'efp[tag-name]', [
+			'type'              => 'option',
+			'sanitize_callback' => 'sanitize_text_field',
+		] );
+		$wp_customize->add_control( 'efp[tag-name]', [
+			'label'          => esc_html__( 'Tag name', 'erocket' ),
+			'section'        => 'efp',
+			'theme_supports' => 'efp',
+		] );
 	}
 }

@@ -18,13 +18,9 @@ class SocialMedia extends WP_Widget {
 		$this->defaults = [
 			'title' => esc_html__( 'Social Media', 'erocket' ),
 		];
-		parent::__construct(
-			'esm',
-			esc_html__( '[eRocket] Social Media', 'erocket' ),
-			[
-				'description' => esc_html__( '[eRocket] Social Media', 'erocket' ),
-			]
-		);
+		parent::__construct( 'esm', esc_html__( '[eRocket] Social Media', 'erocket' ), [
+			'description' => esc_html__( '[eRocket] Social Media', 'erocket' ),
+		] );
 	}
 
 	/**
@@ -99,7 +95,7 @@ class SocialMedia extends WP_Widget {
 			?>
 			<p>
 				<label for="<?= $this->get_field_id( $key ); ?>"><?= esc_html( $service['name'] ); ?>:</label>
-				<input class="widefat" id="<?= $this->get_field_id( $key ); ?>" name="<?= $this->get_field_name( $key ); ?>" type="text" value="<?= isset( $instance[ $key ] ) ? esc_attr( $instance[ $key ] ) : ''; ?>">
+				<input class="widefat" id="<?= $this->get_field_id( $key ); ?>" name="<?= $this->get_field_name( $key ); ?>" type="text" value="<?= esc_attr( $instance[ $key ] ?? '' ); ?>">
 			</p>
 		<?php endforeach; ?>
 		<?php
