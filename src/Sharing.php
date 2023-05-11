@@ -125,19 +125,19 @@ class Sharing {
 		if ( empty( $_POST['submit'] ) || ! check_ajax_referer( 'save', false, false ) ) {
 			return;
 		}
-		$share_text = $_POST['share_text'] ?? '';
+		$share_text = isset( $_POST['share_text'] ) ? sanitize_text_field( wp_unslash( $_POST['share_text'] ) ) : '';
 
 		// Make sure selected services are in the predefined list.
-		$sharing_services = isset( $_POST['sharing_services'] ) && is_array( $_POST['sharing_services'] ) ? $_POST['sharing_services'] : [];
+		$sharing_services = isset( $_POST['sharing_services'] ) && is_array( $_POST['sharing_services'] ) ? wp_unslash( $_POST['sharing_services'] ) : [];
 		$sharing_services = array_filter( $sharing_services, function( $service ) {
 			return array_key_exists( $service, $this->services );
 		} );
 
 		// Validate position.
-		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], [ 'before', 'after', 'both' ], true ) ? $_POST['sharing_position'] : 'after';
+		$sharing_position = isset( $_POST['sharing_position'] ) && in_array( $_POST['sharing_position'], [ 'before', 'after', 'both' ], true ) ? sanitize_text_field( wp_unslash( $_POST['sharing_position'] ) ) : 'after';
 
 		// Make sure post types valid and exist.
-		$sharing_types = isset( $_POST['sharing_types'] ) && is_array( $_POST['sharing_types'] ) ? $_POST['sharing_types'] : [];
+		$sharing_types = isset( $_POST['sharing_types'] ) && is_array( $_POST['sharing_types'] ) ? wp_unslash( $_POST['sharing_types'] ) : [];
 		$sharing_types = array_filter( $sharing_types, function( $post_type ) {
 			return post_type_exists( $post_type );
 		} );
